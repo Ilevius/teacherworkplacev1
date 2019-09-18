@@ -2,14 +2,22 @@
     if( isset($postdata['DoSignup']) )
         {
             $errors=array();
-            if( $postdata['']=='' )
+            if( $postdata['login']=='' )
+                {
+                    $errors[]='Введите, пожалуйста, логин!';
+                }
+            if( $postdata['email']=='Введите, пожалуйста, адрес электронной почты!' )
                 {
                     $errors[]='';
                 }
-                if( $postdata['']=='' )
+            if( $postdata['password']=='Введите, пожалуйста, пароль!' )
                 {
                     $errors[]='';
-               }
+                }
+            if( !$postdata['password']==$postdata['password2'] )
+                {
+                    $errors[]='Пароли не совпадают!';
+                }
 
         }
 ?>
