@@ -30,7 +30,7 @@ $postdata=$_POST;
         else                                                     // если пользователь НЕ авторизован
             {
                 require('libs/guestnavbar.php');                                                // выдаем гостевую панель навигации
-                require('libs/startpage.php');                                              // выдаем главную страницу
+                require('libs/registrationform.php');                                              // выдаем главную страницу
             }
             
 
