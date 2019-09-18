@@ -1,6 +1,6 @@
 <?php
-session_start();//поднимаем сессию
-require('libs/db.php');
+session_start();                                        //поднимаем сессию
+require('libs/db.php');                                 // подключаемся к базе данных
 $session=$_SESSION;
 $getdata=$_GET;
 $postdata=$_POST;
@@ -23,14 +23,16 @@ $postdata=$_POST;
     <body>
     <?php
 
-        if( isset($session['UserRole']) )
+        if( isset($session['UserRole']) )                         // если пользователь авторизован
             {
 
             }
-        else
-        
+        else                                                     // если пользователь НЕ авторизован
             {
-                require('libs/startpage.php');   
+                if($getdata['login']=='LoginError'){require('libs/loginerror.php');}        // если неверный ввод выводим ошибку
+                if($getdata['login']=='LoggingIn'){require('libs/login.php');}              // отправка логина и пароля на проверку
+                require('libs/guestnavbar.php');                                                // выдаем гостевую панель навигации
+                require('libs/startpage.php');                                              // выдаем главную страницу
             }
             
   /*          
