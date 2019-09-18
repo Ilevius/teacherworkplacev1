@@ -2,17 +2,17 @@
     if( isset($postdata['DoSignup']) )
         {
             $errors=array();
-            if( $postdata['login']=='' )
+            if( trim($postdata['login'])=='' )
                 {
                     $errors[]='Введите, пожалуйста, логин!';
                 }
-            if( $postdata['email']=='Введите, пожалуйста, адрес электронной почты!' )
+            if( trim($postdata['email'])=='' )
                 {
-                    $errors[]='';
+                    $errors[]='Введите, пожалуйста, адрес электронной почты!';
                 }
-            if( $postdata['password']=='Введите, пожалуйста, пароль!' )
+            if( $postdata['password']=='' )
                 {
-                    $errors[]='';
+                    $errors[]='Введите, пожалуйста, пароль!';
                 }
             if( $postdata['password']!=$postdata['password2'] )
                 {
@@ -20,7 +20,7 @@
                 }
             if( empty($errors) )
                 {
-                    // go registration
+                    alert('success', 'Регистрация прошла успешно!');
                 }
             else
                 {
