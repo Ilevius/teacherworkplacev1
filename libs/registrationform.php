@@ -25,13 +25,12 @@
             else
                 {
                     alert('danger', array_shift($errors));   
-                    echo '!!!!!';
                 }
 
         }
 ?>
 
-<form action="registration.php">
+<form action="registration.php" method="POST">
     <p>
         <p><strong>Ваш логин</strong></p>
         <input type="text" name="login">
