@@ -25,6 +25,7 @@
             else
                 {
                     alert('danger', array_shift($errors));   
+                    echo '!!!!!';
                 }
 
         }
