@@ -8,6 +8,7 @@
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
                     <a class="nav-link" href="index.php?reg=0">Главная <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="registration.php">Регистрация на сайте <span class="sr-only">(current)</span></a>
                 </li>
             </ul>
             <form action="index.php?login=LoggingIn" method="post" class="form-inline my-2 my-lg-0">
