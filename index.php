@@ -7,6 +7,10 @@
     <title>Test site</title>
 </head>
 <body>
+
+<?php
+echo getenv("DATABASE_URL");
+?>
     
 </body>
 </html>
