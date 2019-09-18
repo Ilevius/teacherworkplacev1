@@ -14,9 +14,17 @@
                 {
                     $errors[]='';
                 }
-            if( !$postdata['password']==$postdata['password2'] )
+            if( $postdata['password']!=$postdata['password2'] )
                 {
                     $errors[]='Пароли не совпадают!';
+                }
+            if( empty($errors) )
+                {
+                    // go registration
+                }
+            else
+                {
+                    alert('danger', array_shift($errors));   
                 }
 
         }

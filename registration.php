@@ -1,6 +1,7 @@
 <?php
 session_start();                                        //поднимаем сессию
 require('libs/db.php');                                 // подключаемся к базе данных
+require('libs/functions.php');
 $session=$_SESSION;
 $getdata=$_GET;
 $postdata=$_POST;
