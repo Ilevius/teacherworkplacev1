@@ -60,7 +60,7 @@ switch($_SESSION['user']['role'])
         echo $adminmenu;
         echo $userbox;
         break;
-    case 7:
+    case 5:
         echo $subscribermenu;
         echo $userbox;
         break;

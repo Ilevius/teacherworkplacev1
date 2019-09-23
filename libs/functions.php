@@ -33,5 +33,29 @@ function showappmessage()
     return $result;
   }
 
+  function createlevels()
+  {
+    require('libs/db.php');
+    $level=R::dispense('level');
+    $level->name='администратор';
+    R::store($level);
+
+    $level=R::dispense('level');
+    $level->name='старший преподаватель';
+    R::store($level);
+
+    $level=R::dispense('level');
+    $level->name='преподаватель';
+    R::store($level);
+
+    $level=R::dispense('level');
+    $level->name='ученик';
+    R::store($level);
+
+    $level=R::dispense('level');
+    $level->name='подписчик';
+    R::store($level);
+  }
+
 
 ?>

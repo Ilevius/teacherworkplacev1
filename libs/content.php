@@ -13,7 +13,7 @@ switch($_SESSION['user']['role'])
             }
             break;
 
-        case 4:                 // Учительские приложения и их маршрутизация
+        case 3:                 // Учительские приложения и их маршрутизация
             switch($_GET['reg'])
             {
                 default:
@@ -21,7 +21,15 @@ switch($_SESSION['user']['role'])
                     break;   
             }
             break;
-        case 5:                 // Ученические приложения и их маршрутизация
+        case 4:                 // Ученические приложения и их маршрутизация
+            switch($_GET['reg'])
+            {
+                default:
+                    include('libs/apps/startpage.php');
+                    break;   
+            }
+            break;
+        case 5:                 // Приложения подписчиков
             switch($_GET['reg'])
             {
                 default:

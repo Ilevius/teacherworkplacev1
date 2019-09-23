@@ -4,7 +4,7 @@ require('libs/functions.php');
 $currentuser=$_SESSION['user'];
 $getdata=$_GET;
 $postdata=$_POST;
-
+createlevels();
 ?>
 <!DOCTYPE html>
 <html>
