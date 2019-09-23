@@ -1,9 +1,10 @@
 <?php
 session_start();                                        //поднимаем сессию
-require('libs/db.php');                                 // подключаемся к базе данных
-$session=$_SESSION;
+require('libs/functions.php');
+$currentuser=$_SESSION['user'];
 $getdata=$_GET;
 $postdata=$_POST;
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -21,91 +22,21 @@ $postdata=$_POST;
         <script type="text/javascript" src='js/tiamat.js'></script>
     </head>
     <body>
-    <?php
+        <?php showappmessage();                                      // Отображение ошибок и прочих сообщений при авторизации или регистрации?>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="#">TWP</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
-        if( isset($session['UserRole']) )                         // если пользователь авторизован
-            {
-
-            }
-        else                                                     // если пользователь НЕ авторизован
-            {
-                if($getdata['login']=='LoginError'){require('libs/loginerror.php');}        // если неверный ввод выводим ошибку
-                if($getdata['login']=='LoggingIn'){require('libs/login.php');}              // отправка логина и пароля на проверку
-                require('libs/guestnavbar.php');                                                // выдаем гостевую панель навигации
-                require('libs/startpage.php');                                              // выдаем главную страницу
-            }
-            
-  /*          
-            //СОБИРАЕМ ЮЗЕРУ ПАНЕЛЬ НАВИГАЦИИ переключаем режим просмотра СМОТРЯ КТО ОН
-        
-        if ($_SESSION['rank']=='')                                                    //если не авторизован
-            {
-                if($_GET['login']=='false'){include('stuff/false_parol.php');}        // если неверный ввод
-                if($_GET['login']=='...'){include('stuff/login.php');}                // отправка логина и пароля на проверку
-                include('stuff/navbar_host.php');                                    // НАВБАР ДЛЯ ГОСТЯ 
-                include('main.php');
-            }
-        else                                                                          //если Авторизован
-            {
-                if($_GET['login']=='logout')
-                    {
-                        $_SESSION = array();
-                        echo '<script>location.replace("index.php");</script>'; 
-                        exit;
-                    } // если выходим
-                include('stuff/regswitch.php');                                        // прослушивам меню и переключаем режим работы
-                switch($_SESSION['rank'])                                               // ВЫДАЧА КОНТЕНТА В ЗАВИСИМОСТИ ОТ ПРАВ ЮЗЕРА
-                    {
-                        case 0:
-                            include('stuff/navbar_pupil.php');                        // навбар ученика
-                            switch($_SESSION['reg'])
-                                {
-                                    case 0:
-                                        include('main.php');
-                                        break;
-                                    case 1:
-                                        include('stuff/test.php');
-                                        break;
-                                    case 2:
-                                        include('stuff/browser.php');
-                                        break;    
-                                }
-                            break;
-                        case 1:
-                            include('stuff/navbar_admin.php');                       // ADMINISTRATOR NAVBAR
-                            switch($_SESSION['reg'])
-                                {
-                                    case 0:
-                                        include('main.php');
-                                        break;
-                                    case 1:
-                                        include('stuff/s2tselection.php');
-                                        include('stuff/test.php');
-                                        break;
-                                    case 2:
-                                        include('stuff/s2tselection.php');
-                                        include('stuff/themeselection.php');
-                                        include('stuff/browser.php');
-                                        break;
-                                    case 3:
-                                        include('stuff/editor_text.php');
-                                        break;
-                                    case 4:
-                                        include('stuff/editor_picture.php');
-                                        break;
-                                    case 5:
-                                        include('stuff/editor_ins.php');
-                                        break;
-                                    case 6:
-                                        include('stuff/editor_two.php');
-                                        break;
-                                }
-                            break;
-                    }
-            }
-
-
-            */
-    ?>
+                    <?php
+                        require('libs/regswitch.php');      //      Выделяем активный пункт меню
+                        require('libs/navbarcontent.php'); //      Вывод пунктов меню доступных данному пользователю, его уголка  
+                    ?>
+       
+            </div>
+        </nav>                                                                  
+    <?php require('libs/content.php');                      // Вывод основного контента страницы ?>                    
     </body>
 </html>
