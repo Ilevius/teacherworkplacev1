@@ -13,8 +13,7 @@ if( $_POST['password']=='' )
 $user = R::findOne('users', 'login=?', array($_POST['login']) );
 if( $user )                                                                     //there is a user
     {
-        //if( password_verify($postdata['password'], $user->password) )           // password is right
-        if( $_POST['password']==$user->password )
+        if( password_verify($postdata['password'], $user->password) )           // password is right
             {
                 $loggeduser=array();
                 $loggeduser['login'] = $user->login;
