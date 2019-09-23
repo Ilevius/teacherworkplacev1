@@ -11,10 +11,10 @@ $adminmenu='
 '; 
 $guestmenu='
 <ul class="navbar-nav mr-auto">
-<li class="nav-item '.$menu1.'">
+<li class="nav-item '.$menu0.'">
     <a class="nav-link" href="index.php?reg=0">Главная <span class="sr-only">(current)</span></a>
 </li>
-<li class="nav-item '.$menu2.'">
+<li class="nav-item '.$menu1.'">
    <a class="nav-link" href="index.php?reg=1">Регистрация</a>
 </li>
 </ul>
