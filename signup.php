@@ -32,7 +32,7 @@
             $user->login = $_POST['login'];
             $user->email = $_POST['email'];
             $user->password = password_hash($postdata['password'], PASSWORD_DEFAULT);
-            $user->level = R::load('level', 1);
+            $user->level = R::load('level', 5);
             R::store($user);
             sendappmessage('Регистрация', 'success', "успешно!");
             header('Location: index.php');
