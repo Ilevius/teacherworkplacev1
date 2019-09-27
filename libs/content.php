@@ -16,6 +16,9 @@ switch($_SESSION['user']['role'])
         case 3:                 // Учительские приложения и их маршрутизация
             switch($_GET['reg'])
             {
+                case 1:
+                    include('libs/apps/works.php');
+                    break; 
                 default:
                     include('libs/apps/startpage.php');
                     break;   

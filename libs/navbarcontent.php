@@ -9,6 +9,19 @@ $adminmenu='
 </li>
 </ul>
 '; 
+$teachermenu='
+<ul class="navbar-nav mr-auto">
+<li class="nav-item '.$menu0.'">
+    <a class="nav-link" href="index.php?reg=0">Главная <span class="sr-only">(current)</span></a>
+</li>
+<li class="nav-item '.$menu1.'">
+   <a class="nav-link" href="index.php?reg=1">Работы</a>
+</li>
+</ul>
+'; 
+
+
+
 $guestmenu='
 <ul class="navbar-nav mr-auto">
 <li class="nav-item '.$menu0.'">
@@ -58,6 +71,10 @@ switch($_SESSION['user']['role'])
 {
     case 1:
         echo $adminmenu;
+        echo $userbox;
+        break;
+    case 3:
+        echo $teachermenu;
         echo $userbox;
         break;
     case 5:
