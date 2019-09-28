@@ -24,13 +24,20 @@ if( isset($_POST['savework']) )
     
     if( empty($errors) )
         {
-            $work = R::dispense('works');                       // creates a work
-            $work->header = $_POST['header'];                   // sets work's title
-            $work->superkey = $_POST['superkey'];               // sets it's unique key in users store
-            $work->date = time();                               // the time of creation
-            $newworkid = R::store($work);                       // a new work's been saved
+            if( isset($_GET['workid']) )
+            {
+                $work = R::load( 'works', $_GET['workid'] );                     // reload the work
+            }
+            else
+            {
+                $work = R::dispense('works');                       // creates a work
+                $work->header = $_POST['header'];                   // sets work's title
+                $work->superkey = $_POST['superkey'];               // sets it's unique key in users store
+                $work->date = time();                               // the time of creation
+                $newworkid = R::store($work);                       // a new work's been saved
+                $work = R::load( 'works', $newworkid );                     // reload the work
+            }
 
-            $work = R::load( 'works', $newworkid );                     // reload the work
             $ask = R::dispense('asks');                                 // create an ask
             $ask->text = $_POST['ask1'];                                // set its text
             $ask->right = $_POST['right1'];                             // its answer
@@ -40,9 +47,9 @@ if( isset($_POST['savework']) )
             $ask->sharedAsktoworkList[] = $asktowork;                   // relation for ask
             R::storeAll( [$work, $ask] );                               // lets store all this!
 
-            sendappmessage('Регистрация', 'success', "успешно!");
-            header('Location: index.php');
-            exit();  
+            //sendappmessage('Регистрация', 'success', "успешно!");
+            //header('Location: index.php');
+            //exit();  
         }
     else
         {
@@ -54,44 +61,82 @@ if( isset($_POST['savework']) )
 }
 ?>
 
-<div class="container">
-<div class="card">
-  <div class="card-header">
-    Работа для учеников
-  </div>
-  <div class="card-body">
-    <blockquote class="blockquote mb-0">
-        <p>
-            <form action="index.php?reg=1" method="POST">
-                <p>
-                    <p><strong>Введите название работы</strong></p>
-                    <input type="text" name="header">
-                </p>
-                <p>
-                    <p><strong>Введите уникальный номер работы</strong></p>
-                    <input type="text" name="superkey">
-                </p>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-2">
+            <?php 
+                $itemspage=paginate(R::count('works'), $_GET['page'], 5);
+                $works=R::loadAll('works',  $itemspage['ids']);
+                if( $itemspage['factpage'] == 1 ){ $prev='disabled';}
+                else{$prev='';}
+                if( $itemspage['factpage'] == $itemspage['total'] ){ $next='disabled';}
+                else{$next='';}
+            ?>
 
-                <?php for ($i = 1; $i <= 20; $i++) { ?>
-                <p>
-                    <p><strong>Введите текст вопроса №<?php echo $i;?></strong></p>
-                    <input type="text" name="ask<?php echo $i;?>">
+            <ul>
+                <?php 
+                    foreach($works as $work)
+                    {
+                        echo '<li><a href="index.php?reg=1&workid='.$work->id.'">'.$work->header.'</a></li>';
+                    }
+                ?>
+            </ul>             
+        </div>
+
+        <div class="col-8">
+            <div class="card">
+                <div class="card-header">
+                    Работа для учеников
+                    <?php
+                        if( isset($_GET['workid']) )
+                        {
+                            $openedwork=R::load('works', $_GET['workid']);
+                        }
                     
-                    <p><strong>Введите правильный ответ на вопрос №<?php echo $i;?> </strong></p>
-                    <input type="text" name="right<?php echo $i;?>">
-                </p>
+                    ?>
 
-                <?php }?>
 
-                <p>
-                    <button type="submit" name="savework">Сохранить изменения</button>
-                </p>
-            </form>
-        </p>
+                </div>
+                <div class="card-body">
+                    <blockquote class="blockquote mb-0">
+                        <p>
+                            <form action="index.php?reg=1" method="POST">
+                                <p>
+                                    <p><strong>Введите название работы</strong></p>
+                                    <input type="text" name="header" value="<?php echo $openedwork->header;?>">
+                                </p>
+                                <p>
+                                    <p><strong>Введите уникальный номер работы</strong></p>
+                                    <input type="text" name="superkey" value="<?php echo print_r(end($openedwork->sharedAsktoworkList));?>">
+                                </p>
+                                <?php for ($i = 1; $i <= 2; $i++) { ?>
+                                <p>
+                                    <p><strong>Введите текст вопроса №<?php echo $i;?></strong></p>
+                                    <input type="text" name="ask<?php echo $i;?>">
 
-    </blockquote>
-  </div>
-</div>
+                                    <p><strong>Введите правильный ответ на вопрос №<?php echo $i;?> </strong></p>
+                                    <input type="text" name="right<?php echo $i;?>">
+                                </p>
+                                
+                                <?php }?>
+                                
+                                <p>
+                                    <button type="submit" name="savework">Сохранить изменения</button>
+                                </p>
+                            </form>
+                        </p>
+                                
+                    </blockquote>
+                  </div>
+                </div>
+        </div>
+
+        <div class="col-2">
+             
+        </div>
+    </div>
+
+
 </div>
 
 <?php else: ?>
