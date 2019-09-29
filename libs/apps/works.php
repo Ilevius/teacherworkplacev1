@@ -13,11 +13,11 @@ if( isset($_POST['savework']) )
         {
             $errors[]='Введите, пожалуйста, уникальный номер работы!';
         }
-    if( trim($_POST['ask1'])=='' )
+    if( trim($_POST['ask'][0])=='' )
         {
             $errors[]='Введите, пожалуйста, текст первого вопроса!';
         }
-    if( trim($_POST['right1'])=='' )
+    if( trim($_POST['right'][0])=='' )
         {
             $errors[]='Введите, пожалуйста, правильный ответ на первый вопрос!';
         }
@@ -26,7 +26,7 @@ if( isset($_POST['savework']) )
         {
             if( isset($_GET['workid']) )
             {
-                $work = R::load( 'works', $_GET['workid'] );                     // reload the work
+                //$work = R::load( 'works', $_GET['workid'] );                     // reload the work
             }
             else
             {
@@ -34,18 +34,20 @@ if( isset($_POST['savework']) )
                 $work->header = $_POST['header'];                   // sets work's title
                 $work->superkey = $_POST['superkey'];               // sets it's unique key in users store
                 $work->date = time();                               // the time of creation
-                $newworkid = R::store($work);                       // a new work's been saved
-                $work = R::load( 'works', $newworkid );                     // reload the work
+                foreach($_POST['ask'] as $key => $value)
+                {
+                    $ask = R::dispense('asks');
+                    $ask->text = $value;                                // set its text
+                    $ask->right = $_POST['right'][$key];                // its answer
+                    $ask->sharedWorksList[]=$work;
+                    R::store($ask);
+                }
             }
+            echo '<script>location.replace("index.php?reg=1");</script>'; 
+            exit();  
 
-            $ask = R::dispense('asks');                                 // create an ask
-            $ask->text = $_POST['ask1'];                                // set its text
-            $ask->right = $_POST['right1'];                             // its answer
-            $asktowork = R::dispense('asktowork');                      // glue table
-            $asktowork->name = '1';                                     // the number of the new ask in the current work
-            $work->sharedAsktoworkList[] = $asktowork;                  // relation for work
-            $ask->sharedAsktoworkList[] = $asktowork;                   // relation for ask
-            R::storeAll( [$work, $ask] );                               // lets store all this!
+
+
 
             //sendappmessage('Регистрация', 'success', "успешно!");
             //header('Location: index.php');
@@ -53,7 +55,7 @@ if( isset($_POST['savework']) )
         }
     else
         {
-            sendappmessage('Регистрация', 'danger', array_shift($errors));
+            //sendappmessage('Регистрация', 'danger', array_shift($errors));
             //header('Location: index.php?reg=1'); 
             echo '<script>location.replace("index.php?reg=1");</script>'; 
             exit();  
@@ -65,7 +67,7 @@ if( isset($_POST['savework']) )
     <div class="row">
         <div class="col-2">
             <?php 
-                $itemspage=paginate(R::count('works'), $_GET['page'], 5);
+                $itemspage=paginate(R::count('works'), $_GET['page'], 10);
                 $works=R::loadAll('works',  $itemspage['ids']);
                 if( $itemspage['factpage'] == 1 ){ $prev='disabled';}
                 else{$prev='';}
@@ -88,9 +90,18 @@ if( isset($_POST['savework']) )
                 <div class="card-header">
                     Работа для учеников
                     <?php
-                        if( isset($_GET['workid']) )
+                        if( isset($_GET['workid']) )                    // если учитель нажал на работу для ее редактирования
                         {
-                            $openedwork=R::load('works', $_GET['workid']);
+                            $openedwork = R::load('works', $_GET['workid']);// находим работу по айди
+                            $asks = $openedwork->sharedAsks;
+                        }
+                        elseif( isset($_GET['asknumber']) )
+                        {
+                            $asks = range(1, $_GET['asknumber']);
+                        }
+                        else
+                        {
+                            $asks = range(1, 2);
                         }
                     
                     ?>
@@ -101,24 +112,31 @@ if( isset($_POST['savework']) )
                     <blockquote class="blockquote mb-0">
                         <p>
                             <form action="index.php?reg=1" method="POST">
-                                <p>
-                                    <p><strong>Введите название работы</strong></p>
-                                    <input type="text" name="header" value="<?php echo $openedwork->header;?>">
-                                </p>
+                                <div class="form-group">
+                                    <label for="WorkHeader">Заголовок работы</label>
+                                    <textarea name="header" class="form-control" id="WorkHeader" rows="3"><?php echo $openedwork->header;?></textarea>
+                                </div>
                                 <p>
                                     <p><strong>Введите уникальный номер работы</strong></p>
-                                    <input type="text" name="superkey" value="<?php echo print_r(end($openedwork->sharedAsktoworkList));?>">
+                                    <input type="text" name="superkey" value="<?php echo $openedwork->superkey;?>">
                                 </p>
-                                <?php for ($i = 1; $i <= 2; $i++) { ?>
-                                <p>
-                                    <p><strong>Введите текст вопроса №<?php echo $i;?></strong></p>
-                                    <input type="text" name="ask<?php echo $i;?>">
-
-                                    <p><strong>Введите правильный ответ на вопрос №<?php echo $i;?> </strong></p>
-                                    <input type="text" name="right<?php echo $i;?>">
-                                </p>
+                                <?php $i=1; foreach($asks as $ask) { ?>
+                                <div class="row">
+                                    <div class="col-10">
+                                        <div class="form-group">
+                                            <label for="ask">Вопрос №<?php echo $i;?></label>
+                                            <textarea name="ask[]" class="form-control" id="ask" rows="3"><?php echo $ask->text;?></textarea>
+                                        </div>                                   
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="form-group">
+                                            <label for="answer">ответ</label>
+                                            <textarea name="right[]" class="form-control" id="answer" rows="3"><?php echo $ask->right;?></textarea>
+                                        </div> 
+                                    </div>
+                                </div>
                                 
-                                <?php }?>
+                                <?php $i++; }?>
                                 
                                 <p>
                                     <button type="submit" name="savework">Сохранить изменения</button>
